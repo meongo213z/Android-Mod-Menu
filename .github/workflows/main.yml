@@ -1,4 +1,4 @@
-name: Build Mod Menu
+name: Build SO Menu
 on:
   workflow_dispatch:
 
@@ -9,20 +9,14 @@ jobs:
       - name: Get source code
         uses: actions/checkout@v4
 
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-
-      - name: Compile Code
+      - name: Compile C++ (Fast NDK)
         run: |
-          chmod +x gradlew
-          ./gradlew assembleDebug
+          cd app/src/main/jni
+          $ANDROID_NDK_HOME/ndk-build
 
       - name: Upload Result
         uses: actions/upload-artifact@v4
         with:
-          name: File-APK-Ket-Qua
-          path: app/build/outputs/apk/debug/
+          name: File-SO-Menu
+          path: app/src/main/libs/
           
