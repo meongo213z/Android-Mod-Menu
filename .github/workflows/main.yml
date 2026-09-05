@@ -1,4 +1,4 @@
-name: Build SO Menu
+name: Build Full APK
 on:
   workflow_dispatch:
 
@@ -6,17 +6,26 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Get source code
+      - name: Get code
         uses: actions/checkout@v4
 
-      - name: Compile C++ (Fast NDK)
-        run: |
-          cd app/src/main/jni
-          $ANDROID_NDK_HOME/ndk-build
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
 
-      - name: Upload Result
+      - name: Fix NDK Path
+        run: echo "ndk.dir=$ANDROID_NDK_LATEST_HOME" > local.properties
+
+      - name: Build APK
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: File-SO-Menu
-          path: app/src/main/libs/
-        
+          name: Menu-APK-Hoan-Chinh
+          path: app/build/outputs/apk/debug/
+          
