@@ -1,0 +1,28 @@
+name: Build Mod Menu
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get source code
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Compile Code
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+      - name: Upload Result
+        uses: actions/upload-artifact@v3
+        with:
+          name: File-APK-Ket-Qua
+          path: app/build/outputs/apk/debug/
+          
